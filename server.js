@@ -1,6 +1,7 @@
 'use strict';
 
 const Hapi = require('hapi');
+const knex = require('knex')(require('./knexfile'))
 
 const server = Hapi.server({
     port: 3000,
@@ -23,6 +24,17 @@ server.route({
 
         return 'Hello, ' + encodeURIComponent(request.params.name) + '!';
     }
+});
+
+server.route({
+    method: 'GET',
+    path: '/user/{id}',
+    handler: (request, h) => {
+        const { id } = request.params;
+        return knex.select()
+            .from('users')
+            .where({ id });
+        }
 });
 
 const init = async () => {
